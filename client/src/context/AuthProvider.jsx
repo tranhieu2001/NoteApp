@@ -1,0 +1,47 @@
+import { CircularProgress } from '@mui/material'
+import { getAuth } from 'firebase/auth'
+import React, { createContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+export const AuthContext = createContext()
+
+function AuthProvider({ children }) {
+  const [user, setUser] = useState({})
+  const navigate = useNavigate()
+  const auth = getAuth()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubcribed = auth.onIdTokenChanged((user) => {
+      if (user?.uid) {
+        setUser(user)
+        if (user.accessToken !== localStorage.getItem('accessToken')) {
+          localStorage.setItem('accessToken', user.accessToken)
+          window.location.reload()
+        }
+        localStorage.setItem('accessToken', user.accessToken)
+        setIsLoading(false)
+        return
+      }
+
+      // reset user info
+      setIsLoading(false)
+      setUser({})
+      localStorage.clear()
+      navigate('/login')
+    })
+
+    return () => {
+      unsubcribed()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth])
+
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {isLoading ? <CircularProgress /> : children}
+    </AuthContext.Provider>
+  )
+}
+
+export default AuthProvider
