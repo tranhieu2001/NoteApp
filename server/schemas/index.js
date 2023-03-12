@@ -6,7 +6,7 @@ type Folder {
   name: String,
   createdAt: String,
   author: Author,
-  notes: [Note]
+  notes: [Note],
 }
 
 type Note {
@@ -21,9 +21,9 @@ type Author {
 }
 
 type Query {
-  folders: [Folder]
-  folder(folderId: String!): Folder
-  note(noteId: String): Note
+  folders: [Folder],
+  folder(folderId: String!): Folder,
+  note(noteId: String): Note,
 }
 
 type Mutation {
@@ -31,5 +31,15 @@ type Mutation {
   addFolder(name: String!): Folder,
   addNote(content: String!, folderId: ID!): Note,
   updateNote(id: String!, content: String!): Note,
+  pushNotification(content: String): Message,
+}
+
+type Message {
+  message: String,
+}
+
+type Subscription {
+  folderCreated: Message,
+  notification: Message,
 }
 `

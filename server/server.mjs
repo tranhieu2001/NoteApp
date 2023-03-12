@@ -7,16 +7,19 @@ import { expressMiddleware } from '@apollo/server/express4'
 import cors from 'cors'
 import 'dotenv/config'
 import mongoose from 'mongoose'
-import './firebase/config.js'
 import { getAuth } from 'firebase-admin/auth'
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { WebSocketServer } from 'ws'
+import { useServer } from 'graphql-ws/lib/use/ws'
 
+import './firebase/config.js'
 import { resolvers } from './resolvers/index.js'
 import { typeDefs } from './schemas/index.js'
 
 const app = express()
 const httpServer = http.createServer(app)
 
-// ------------------ Connect to DB ------------------
+// ------------------------------------------------------ Connect to DB ------------------------------------------------------
 const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@note-app.pdkgo28.mongodb.net/?retryWrites=true&w=majority`
 const PORT = process.env.PORT || 4000
 
@@ -30,15 +33,47 @@ mongoose
     await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve))
     console.log('🚀 Server ready at http://localhost:4000')
   })
-// ---------------------------------------------------
+// ------------------------------------------------------ Connect to DB ------------------------------------------------------
+
+// ------------------------------------------------------ Setup apollo server ------------------------------------------------------
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+// Creating the WebSocket server
+const wsServer = new WebSocketServer({
+  // This is the `httpServer` we created in a previous step.
+  server: httpServer,
+  // Pass a different path here if app.use
+  // serves expressMiddleware at a different path
+  path: '/',
+})
+
+// Hand in the schema we just created and have the
+// WebSocketServer start listening.
+
+const serverCleanup = useServer({ schema }, wsServer)
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  schema,
+  plugins: [
+    // Proper shutdown for the HTTP server.
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+
+    // Proper shutdown for the WebSocket server.
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose()
+          },
+        }
+      },
+    },
+  ],
 })
 
 await server.start()
+
+// ------------------------------------------------------ Setup apollo server ------------------------------------------------------
 
 const authorizationJWT = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization

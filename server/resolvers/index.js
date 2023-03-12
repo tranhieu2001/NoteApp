@@ -1,7 +1,12 @@
 import { GraphQLScalarType } from 'graphql'
+import { PubSub } from 'graphql-subscriptions'
+
 import AuthorModel from '../models/AuthorModel.js'
 import FolderModel from '../models/FolderModel.js'
 import NoteModel from '../models/NoteModel.js'
+import NotificationModel from '../models/NotificationModel.js'
+
+const pubsub = new PubSub()
 
 export const resolvers = {
   Date: new GraphQLScalarType({
@@ -65,6 +70,11 @@ export const resolvers = {
     },
     addFolder: async (parent, args, context) => {
       const newFolder = new FolderModel({ ...args, authorId: context.uid })
+      pubsub.publish('FOLDER_CREATED', {
+        folderCreated: {
+          message: 'A new folder created',
+        },
+      })
       await newFolder.save()
       return newFolder
     },
@@ -77,6 +87,24 @@ export const resolvers = {
       const noteId = args.id
       const note = await NoteModel.findByIdAndUpdate(noteId, args)
       return note
+    },
+    pushNotification: async (parent, args) => {
+      const newNotification = await NotificationModel(args)
+      pubsub.publish('PUSH_NOTIFICATION', {
+        notification: {
+          message: args.content,
+        },
+      })
+      await newNotification.save()
+      return { message: 'SUCCESS' }
+    },
+  },
+  Subscription: {
+    folderCreated: {
+      subscribe: () => pubsub.asyncIterator(['FOLDER_CREATED']),
+    },
+    notification: {
+      subscribe: () => pubsub.asyncIterator(['PUSH_NOTIFICATION']),
     },
   },
 }
