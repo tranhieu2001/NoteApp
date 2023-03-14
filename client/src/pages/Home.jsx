@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { Outlet, useLoaderData } from 'react-router-dom'
-import FolderList from '../components/FolderList'
+import FolderList from '../components/folders/FolderList'
 // import Notification from '../components/Notification'
 
 import UserMenu from '../components/UserMenu'
@@ -14,7 +14,13 @@ function Home() {
       <Typography variant="h4" sx={{ mb: '20px' }}>
         NOTE APP
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'right', mb: '10px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'right',
+          mb: '10px',
+        }}
+      >
         <UserMenu />
         {/* <Notification /> */}
       </Box>

@@ -32,6 +32,9 @@ type Mutation {
   addNote(content: String!, folderId: ID!): Note,
   updateNote(id: String!, content: String!): Note,
   pushNotification(content: String): Message,
+  deleteFolder(folderId: String!): Message,
+  deleteNote(noteId: String!): Message,
+  renameFolder(folderId: String!, name: String!): Message,
 }
 
 type Message {

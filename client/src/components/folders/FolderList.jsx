@@ -2,7 +2,10 @@ import { Card, CardContent, List, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+
 import NewFolder from './NewFolder'
+import DeleteFolder from './DeleteFolder'
+import RenameFolder from './RenameFolder'
 
 function FolderList({ folders }) {
   const { folderId } = useParams()
@@ -47,14 +50,33 @@ function FolderList({ folders }) {
               sx={{
                 mb: '5px',
                 bgcolor: id === activeFolderId ? 'rgb(255 211 140)' : null,
+                transition: 'background-color ease-in-out 200ms',
+                '&:hover': { bgcolor: '#dddddd' },
+                '&:hover .btn': { display: 'block' },
               }}
             >
               <CardContent
-                sx={{ '&:last-child': { pb: '10px' }, padding: '10px' }}
+                sx={{
+                  '&:last-child': { pb: '10px' },
+                  padding: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
               >
                 <Typography sx={{ fontSize: 16, fontWeight: 'bold' }}>
                   {name}
                 </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <RenameFolder name={name} />
+                  <DeleteFolder />
+                </Box>
               </CardContent>
             </Card>
           </Link>

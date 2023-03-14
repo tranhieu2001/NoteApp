@@ -19,6 +19,7 @@ import {
   useSubmit,
 } from 'react-router-dom'
 import moment from 'moment'
+import DeleteNote from './DeleteNote'
 
 function NoteList() {
   const { noteId, folderId } = useParams()
@@ -102,10 +103,20 @@ function NoteList() {
                     mb: '5px',
                     bgcolor:
                       id && id === activeNoteId ? 'rgb(255 211 140)' : null,
+                    transition: 'background-color ease-in-out 200ms',
+                    '&:hover': { bgcolor: '#dddddd' },
+                    '&:hover .btn': { display: 'block' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingRight: '10px',
                   }}
                 >
                   <CardContent
-                    sx={{ '&:last-child': { pb: '10px' }, padding: '10px' }}
+                    sx={{
+                      '&:last-child': { pb: '10px' },
+                      padding: '10px',
+                    }}
                   >
                     <div
                       style={{ fontSize: 14, fontWeight: 'bold' }}
@@ -119,6 +130,7 @@ function NoteList() {
                       )}`}
                     </Typography>
                   </CardContent>
+                  <DeleteNote />
                 </Card>
               </Link>
             )

@@ -1,5 +1,6 @@
 import { graphQLRequest } from './request'
 
+//  ----------------------------- LOADER -----------------------------
 export const notesLoader = async ({ params: { folderId } }) => {
   const query = `query Folders($folderId: String!) {
     folder(folderId: $folderId) {
@@ -29,6 +30,7 @@ export const noteLoader = async ({ params: { noteId } }) => {
   return data
 }
 
+//  ----------------------------- ACTIONS -----------------------------
 export const addNewNote = async ({ params, request }) => {
   const newNote = await request.formData()
   const formDataObj = {}
@@ -64,5 +66,19 @@ export const updateNote = async ({ params, request }) => {
   }`
 
   const data = await graphQLRequest({ query, variables: formDataObj })
+  return data
+}
+
+export const deleteNote = async (noteId) => {
+  const query = `mutation Mutation($noteId: String!) {
+    deleteNote(noteId: $noteId) {
+      message
+    }
+  }`
+
+  const data = await graphQLRequest({
+    query,
+    variables: { noteId },
+  })
   return data
 }

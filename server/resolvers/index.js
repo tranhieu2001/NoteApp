@@ -98,6 +98,22 @@ export const resolvers = {
       await newNotification.save()
       return { message: 'SUCCESS' }
     },
+    deleteFolder: async (parent, args) => {
+      const folderId = args.folderId
+      await FolderModel.findByIdAndDelete(folderId)
+      await NoteModel.deleteMany({ folderId })
+      return { message: 'Deleted Folder' }
+    },
+    renameFolder: async (parent, args) => {
+      const folderId = args.folderId
+      await FolderModel.findByIdAndUpdate(folderId, { name: args.name })
+      return { message: 'Renamed Folder' }
+    },
+    deleteNote: async (parent, args) => {
+      const noteId = args.noteId
+      await NoteModel.findByIdAndDelete(noteId)
+      return { message: 'Deleted Note' }
+    },
   },
   Subscription: {
     folderCreated: {

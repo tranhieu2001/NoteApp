@@ -8,7 +8,7 @@ import {
 import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
 import { useLoaderData, useSubmit, useLocation } from 'react-router-dom'
-import { debounce } from '@mui/material'
+import { Box, debounce } from '@mui/material'
 
 function Note() {
   const { note } = useLoaderData()
@@ -31,7 +31,7 @@ function Note() {
           action: pathname,
         }
       )
-    }, 1000)
+    }, 500)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -60,11 +60,13 @@ function Note() {
   }
 
   return (
-    <Editor
-      editorState={editorState}
-      onEditorStateChange={handleOnChange}
-      placeholder="Write something!"
-    />
+    <Box px={1}>
+      <Editor
+        editorState={editorState}
+        onEditorStateChange={handleOnChange}
+        placeholder="Write something!"
+      />
+    </Box>
   )
 }
 

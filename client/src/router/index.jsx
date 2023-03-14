@@ -1,7 +1,7 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom'
 
-import NoteList from '../components/NoteList'
-import Note from '../components/Note'
+import NoteList from '../components/notes/NoteList'
+import Note from '../components/notes/Note'
 import AuthProvider from '../context/AuthProvider'
 import ErrorPage from '../pages/ErrorPage'
 import Home from '../pages/Home'

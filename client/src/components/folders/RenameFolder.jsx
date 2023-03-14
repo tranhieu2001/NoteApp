@@ -1,48 +1,46 @@
-import { CreateNewFolderOutlined } from '@mui/icons-material'
+import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   TextField,
-  Tooltip,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import { addNewFolder } from '../utils/foldersUtils'
+import { renameFolder } from '../../utils/foldersUtils'
 
-function NewFolder() {
-  const [newFolderName, setNewFolderName] = useState()
+function RenameFolder({ name }) {
+  const { folderId } = useParams()
+  const [folderName, setFolderName] = useState(name)
   const [open, setOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-
   const popupName = searchParams.get('popup')
 
   const handleOpenPopup = () => {
-    setSearchParams({ popup: 'add-folder' })
+    setSearchParams({ popup: 'rename-folder' })
   }
 
   const handleClose = () => {
     navigate(-1)
-    setNewFolderName('')
+    setFolderName('')
   }
 
-  const handleNewFolderNameChange = (e) => {
-    setNewFolderName(e.target.value)
+  const handleRenameFolderNameChange = (e) => {
+    setFolderName(e.target.value)
   }
 
-  const handleAddNewFolder = async () => {
-    await addNewFolder({ name: newFolderName })
+  const handlerenameFolder = async () => {
+    await renameFolder({ folderId, folderName })
 
     handleClose()
   }
 
   useEffect(() => {
-    if (popupName === 'add-folder') {
+    if (popupName === 'rename-folder') {
       setOpen(true)
       return
     }
@@ -52,13 +50,14 @@ function NewFolder() {
 
   return (
     <div>
-      <Tooltip title="Add Folder" onClick={handleOpenPopup}>
-        <IconButton size="small">
-          <CreateNewFolderOutlined sx={{ color: 'white' }} />
-        </IconButton>
-      </Tooltip>
+      <div onClick={handleOpenPopup}>
+        <ModeEditIcon
+          className="btn"
+          sx={{ display: 'none', '&:hover': { color: 'rgb(0, 0, 0, 0.5)' } }}
+        />
+      </div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New Folder</DialogTitle>
+        <DialogTitle>Rename Folder</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -70,17 +69,17 @@ function NewFolder() {
             variant="standard"
             sx={{ width: '400px' }}
             autoComplete="off"
-            value={newFolderName}
-            onChange={handleNewFolderNameChange}
+            value={folderName}
+            onChange={handleRenameFolderNameChange}
           ></TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddNewFolder}>OK</Button>
+          <Button onClick={handlerenameFolder}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>
   )
 }
 
-export default NewFolder
+export default RenameFolder
