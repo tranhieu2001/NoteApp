@@ -1,4 +1,5 @@
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import { Tooltip } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -8,11 +9,11 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { deleteNote } from '../../utils/noteUtils'
 
-function DeleteNote() {
-  const { noteId, folderId } = useParams()
+function DeleteNote({ noteId }) {
+  const { folderId, noteId: currentNoteId } = useParams()
+  const [open, setOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
   const popupName = searchParams.get('popup')
 
   const handleOpenPopup = () => {
@@ -29,22 +30,22 @@ function DeleteNote() {
   }
 
   useEffect(() => {
-    if (popupName === 'delete-note') {
+    if (popupName === 'delete-note' && noteId === currentNoteId) {
       setOpen(true)
       return
     }
 
     setOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [popupName])
 
   return (
     <div>
-      <div onClick={handleOpenPopup}>
+      <Tooltip title="Delete Note" onClick={handleOpenPopup}>
         <DeleteForeverIcon
-          className="btn"
-          sx={{ display: 'none', '&:hover': { color: 'rgb(0, 0, 0, 0.5)' } }}
+          sx={{ '&:hover': { color: 'rgb(0, 0, 0, 0.5)' }, cursor: 'pointer' }}
         />
-      </div>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           {'Are you sure you want to delete this note?'}

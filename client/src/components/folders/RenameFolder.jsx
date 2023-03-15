@@ -6,15 +6,16 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Tooltip,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { renameFolder } from '../../utils/foldersUtils'
 
-function RenameFolder({ name }) {
-  const { folderId } = useParams()
-  const [folderName, setFolderName] = useState(name)
+function RenameFolder({ folderId }) {
+  const { folderId: currentFolderId } = useParams()
+  const [folderName, setFolderName] = useState()
   const [open, setOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -40,30 +41,31 @@ function RenameFolder({ name }) {
   }
 
   useEffect(() => {
-    if (popupName === 'rename-folder') {
+    if (popupName === 'rename-folder' && folderId === currentFolderId) {
       setOpen(true)
       return
     }
 
     setOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [popupName])
 
   return (
     <div>
-      <div onClick={handleOpenPopup}>
+      <Tooltip title="Rename Folder" onClick={handleOpenPopup}>
         <ModeEditIcon
-          className="btn"
-          sx={{ display: 'none', '&:hover': { color: 'rgb(0, 0, 0, 0.5)' } }}
+          sx={{
+            '&:hover': { color: 'rgb(0, 0, 0, 0.5)' },
+            cursor: 'pointer',
+          }}
         />
-      </div>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Rename Folder</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            id="name"
-            label="Folder Name"
             fullWidth
             size="small"
             variant="standard"

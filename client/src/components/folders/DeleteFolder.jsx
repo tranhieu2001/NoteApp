@@ -1,4 +1,5 @@
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import { Tooltip } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -8,13 +9,12 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { deleteFolder } from '../../utils/foldersUtils'
 
-function DeleteFolder() {
-  const { folderId } = useParams()
+function DeleteFolder({ folderId }) {
+  const { folderId: currentFolderId } = useParams()
+  const [open, setOpen] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
   const popupName = searchParams.get('popup')
-
   const handleOpenPopup = () => {
     setSearchParams({ popup: 'delete-folder' })
   }
@@ -29,22 +29,25 @@ function DeleteFolder() {
   }
 
   useEffect(() => {
-    if (popupName === 'delete-folder') {
+    if (popupName === 'delete-folder' && folderId === currentFolderId) {
       setOpen(true)
       return
     }
 
     setOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [popupName])
 
   return (
     <div>
-      <div onClick={handleOpenPopup}>
+      <Tooltip title="Delete Folder" onClick={handleOpenPopup}>
         <DeleteForeverIcon
-          className="btn"
-          sx={{ display: 'none', '&:hover': { color: 'rgb(0, 0, 0, 0.5)' } }}
+          sx={{
+            '&:hover': { color: 'rgb(0, 0, 0, 0.5)' },
+            cursor: 'pointer',
+          }}
         />
-      </div>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           {'Are you sure you want to delete this folder?'}
@@ -58,14 +61,6 @@ function DeleteFolder() {
       </Dialog>
     </div>
   )
-  // return (
-  //   <div onClick={handleDeleteFolder}>
-  //     <DeleteForeverIcon
-  //       className="btn"
-  //       sx={{ display: 'none', '&:hover': { color: 'rgb(0, 0, 0, 0.5)' } }}
-  //     />
-  //   </div>
-  // )
 }
 
 export default DeleteFolder

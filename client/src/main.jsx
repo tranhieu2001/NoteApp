@@ -1,12 +1,12 @@
+import { Container } from '@mui/material'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider } from 'react-router-dom'
-import { Container } from '@mui/material'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { RouterProvider } from 'react-router-dom'
 
+import './firebase/config'
 import './index.css'
 import router from './router'
-import './firebase/config'
 
 // Import font
 import '@fontsource/roboto/300.css'

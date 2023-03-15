@@ -92,47 +92,70 @@ function NoteList() {
         >
           {folder.notes.map(({ id, content, updatedAt }) => {
             return (
-              <Link
+              <Box
                 key={id}
-                to={`note/${id}`}
-                style={{ textDecoration: 'none' }}
-                onClick={() => setActiveNoteId(id)}
+                position="relative"
+                sx={{
+                  '&:hover .btn': { display: 'flex' },
+                }}
               >
-                <Card
-                  sx={{
-                    mb: '5px',
-                    bgcolor:
-                      id && id === activeNoteId ? 'rgb(255 211 140)' : null,
-                    transition: 'background-color ease-in-out 200ms',
-                    '&:hover': { bgcolor: '#dddddd' },
-                    '&:hover .btn': { display: 'block' },
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingRight: '10px',
-                  }}
+                <Link
+                  to={`note/${id}`}
+                  style={{ textDecoration: 'none' }}
+                  onClick={() => setActiveNoteId(id)}
                 >
-                  <CardContent
+                  <Card
                     sx={{
-                      '&:last-child': { pb: '10px' },
-                      padding: '10px',
+                      mb: '5px',
+                      bgcolor:
+                        id && id === activeNoteId ? 'rgb(255 211 140)' : null,
+                      transition: 'background-color ease-in-out 200ms',
+                      '&:hover': { bgcolor: '#dddddd' },
+                      '&:hover .btn': { display: 'block' },
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingRight: '10px',
                     }}
                   >
-                    <div
-                      style={{ fontSize: 14, fontWeight: 'bold' }}
-                      dangerouslySetInnerHTML={{
-                        __html: content.substring(0, 30) || 'Empty',
+                    <CardContent
+                      sx={{
+                        '&:last-child': { pb: '10px' },
+                        padding: '10px',
                       }}
-                    ></div>
-                    <Typography sx={{ fontSize: '10px' }}>
-                      {`Last updated at ${moment(updatedAt).format(
-                        'MMMM Do YYYY, h:mm:ss a'
-                      )}`}
-                    </Typography>
-                  </CardContent>
-                  <DeleteNote />
-                </Card>
-              </Link>
+                    >
+                      <div
+                        style={{ fontSize: 14, fontWeight: 'bold' }}
+                        dangerouslySetInnerHTML={{
+                          __html: content.substring(0, 30) || 'Empty',
+                        }}
+                      ></div>
+                      <Typography sx={{ fontSize: '10px' }}>
+                        {`Last updated at ${moment(updatedAt).format(
+                          'MMMM Do YYYY, h:mm:ss a'
+                        )}`}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Link>
+                <Box
+                  className="btn"
+                  sx={{
+                    height: '100%',
+                    display: 'none',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    padding: '0',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                  }}
+                >
+                  <Box px={0.5}>
+                    <DeleteNote noteId={id} />
+                  </Box>
+                </Box>
+              </Box>
             )
           })}
         </List>

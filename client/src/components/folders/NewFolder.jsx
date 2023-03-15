@@ -62,8 +62,6 @@ function NewFolder() {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
-            label="Folder Name"
             fullWidth
             size="small"
             variant="standard"

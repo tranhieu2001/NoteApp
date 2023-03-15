@@ -1,19 +1,19 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom'
 
-import NoteList from '../components/notes/NoteList'
 import Note from '../components/notes/Note'
+import NoteList from '../components/notes/NoteList'
 import AuthProvider from '../context/AuthProvider'
 import ErrorPage from '../pages/ErrorPage'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
-import ProtectedRoute from './ProtectedRoute'
+import { foldersLoader } from '../utils/foldersUtils'
 import {
   addNewNote,
   noteLoader,
   notesLoader,
-  updateNote,
+  updateNote
 } from '../utils/noteUtils'
-import { foldersLoader } from '../utils/foldersUtils'
+import ProtectedRoute from './ProtectedRoute'
 
 const AuthLayout = () => {
   return (
