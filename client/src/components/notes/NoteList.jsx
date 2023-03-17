@@ -19,7 +19,9 @@ import {
   useSubmit,
 } from 'react-router-dom'
 import moment from 'moment'
+
 import DeleteNote from './DeleteNote'
+import { BoxItem, CardItem, BoxButton, BoxButtons } from '../StyledComponent'
 
 function NoteList() {
   const { noteId, folderId } = useParams()
@@ -92,25 +94,16 @@ function NoteList() {
         >
           {folder.notes.map(({ id, content, updatedAt }) => {
             return (
-              <Box
-                key={id}
-                position="relative"
-                sx={{
-                  '&:hover .btn': { display: 'flex' },
-                }}
-              >
+              <BoxItem key={id}>
                 <Link
                   to={`note/${id}`}
                   style={{ textDecoration: 'none' }}
                   onClick={() => setActiveNoteId(id)}
                 >
-                  <Card
+                  <CardItem
                     sx={{
-                      mb: '5px',
                       bgcolor:
                         id && id === activeNoteId ? 'rgb(255 211 140)' : null,
-                      transition: 'background-color ease-in-out 200ms',
-                      '&:hover': { bgcolor: '#dddddd' },
                       '&:hover .btn': { display: 'block' },
                       display: 'flex',
                       alignItems: 'center',
@@ -136,26 +129,14 @@ function NoteList() {
                         )}`}
                       </Typography>
                     </CardContent>
-                  </Card>
+                  </CardItem>
                 </Link>
-                <Box
-                  className="btn"
-                  sx={{
-                    height: '100%',
-                    display: 'none',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    padding: '0',
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                  }}
-                >
-                  <Box px={0.5}>
+                <BoxButtons className="btn">
+                  <BoxButton>
                     <DeleteNote noteId={id} />
-                  </Box>
-                </Box>
-              </Box>
+                  </BoxButton>
+                </BoxButtons>
+              </BoxItem>
             )
           })}
         </List>

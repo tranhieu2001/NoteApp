@@ -2,6 +2,13 @@ import { Card, CardContent, List, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import {
+  BoxButton,
+  BoxButtons,
+  BoxItem,
+  CardContentItem,
+  CardItem,
+} from '../StyledComponent'
 
 import DeleteFolder from './DeleteFolder'
 import NewFolder from './NewFolder'
@@ -38,13 +45,7 @@ function FolderList({ folders }) {
     >
       {folders.map(({ id, name }) => {
         return (
-          <Box
-            key={id}
-            position="relative"
-            sx={{
-              '&:hover .btn': { display: 'flex' },
-            }}
-          >
+          <BoxItem key={id}>
             <Link
               to={`folders/${id}`}
               style={{
@@ -52,50 +53,27 @@ function FolderList({ folders }) {
               }}
               onClick={() => setActiveFolderId(id)}
             >
-              <Card
+              <CardItem
                 sx={{
-                  mb: '5px',
                   bgcolor: id === activeFolderId ? 'rgb(255 211 140)' : null,
-                  transition: 'background-color ease-in-out 200ms',
-                  '&:hover': { bgcolor: '#dddddd' },
                 }}
               >
-                <CardContent
-                  sx={{
-                    '&:last-child': { pb: '10px' },
-                    padding: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
+                <CardContentItem>
                   <Typography sx={{ fontSize: 16, fontWeight: 'bold' }}>
                     {name}
                   </Typography>
-                </CardContent>
-              </Card>
+                </CardContentItem>
+              </CardItem>
             </Link>
-            <Box
-              className="btn"
-              sx={{
-                height: '100%',
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                padding: '0',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-              }}
-            >
-              <Box px={0.5}>
+            <BoxButtons className="btn">
+              <BoxButton>
                 <RenameFolder folderId={id} />
-              </Box>
-              <Box px={0.5}>
+              </BoxButton>
+              <BoxButton>
                 <DeleteFolder folderId={id} />
-              </Box>
-            </Box>
-          </Box>
+              </BoxButton>
+            </BoxButtons>
+          </BoxItem>
         )
       })}
     </List>
