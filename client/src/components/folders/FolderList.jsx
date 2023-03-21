@@ -59,7 +59,16 @@ function FolderList({ folders }) {
                 }}
               >
                 <CardContentItem>
-                  <Typography sx={{ fontSize: 16, fontWeight: 'bold' }}>
+                  <Typography
+                    sx={{
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      width: '75%',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
                     {name}
                   </Typography>
                 </CardContentItem>

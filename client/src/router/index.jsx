@@ -11,7 +11,7 @@ import {
   addNewNote,
   noteLoader,
   notesLoader,
-  updateNote
+  updateNote,
 } from '../utils/noteUtils'
 import ProtectedRoute from './ProtectedRoute'
 

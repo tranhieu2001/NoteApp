@@ -15,6 +15,7 @@ function DeleteFolder({ folderId }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const popupName = searchParams.get('popup')
+  
   const handleOpenPopup = () => {
     setSearchParams({ popup: 'delete-folder' })
   }
