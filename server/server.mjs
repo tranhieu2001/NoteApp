@@ -11,6 +11,8 @@ import { getAuth } from 'firebase-admin/auth'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
+import compression from 'compression'
+import helmet from 'helmet'
 
 import './firebase/config.js'
 import { resolvers } from './resolvers/index.js'
@@ -108,3 +110,6 @@ app.use(
     },
   })
 )
+
+app.use(helmet())
+app.use(compression())
