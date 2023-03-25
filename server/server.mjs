@@ -92,8 +92,6 @@ const authorizationJWT = async (req, res, next) => {
 // context là đối số thứ 3 của resolver graphQL
 app.use(
   cors(),
-  helmet(),
-  compression(),
   authorizationJWT,
   bodyParser.json(),
   expressMiddleware(server, {
