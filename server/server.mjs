@@ -1,18 +1,16 @@
-import express from 'express'
-import http from 'http'
 import { ApolloServer } from '@apollo/server'
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import bodyParser from 'body-parser'
 import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import bodyParser from 'body-parser'
 import cors from 'cors'
 import 'dotenv/config'
-import mongoose from 'mongoose'
+import express from 'express'
 import { getAuth } from 'firebase-admin/auth'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
-import compression from 'compression'
-import helmet from 'helmet'
+import http from 'http'
+import mongoose from 'mongoose'
+import { WebSocketServer } from 'ws'
 
 import './firebase/config.js'
 import { resolvers } from './resolvers/index.js'
@@ -40,27 +38,17 @@ mongoose
 // ------------------------------------------------------ Setup apollo server ------------------------------------------------------
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-// Creating the WebSocket server
 const wsServer = new WebSocketServer({
-  // This is the `httpServer` we created in a previous step.
   server: httpServer,
-  // Pass a different path here if app.use
-  // serves expressMiddleware at a different path
   path: '/graphql',
 })
-
-// Hand in the schema we just created and have the
-// WebSocketServer start listening.
 
 const serverCleanup = useServer({ schema }, wsServer)
 
 const server = new ApolloServer({
   schema,
   plugins: [
-    // Proper shutdown for the HTTP server.
     ApolloServerPluginDrainHttpServer({ httpServer }),
-
-    // Proper shutdown for the WebSocket server.
     {
       async serverWillStart() {
         return {
@@ -110,6 +98,3 @@ app.use(
     },
   })
 )
-
-app.use(helmet())
-app.use(compression())
