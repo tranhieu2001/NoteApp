@@ -11,8 +11,6 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import http from 'http'
 import mongoose from 'mongoose'
 import { WebSocketServer } from 'ws'
-import helmet from 'helmet'
-import compression from 'compression'
 
 import './firebase/config.js'
 import { resolvers } from './resolvers/index.js'
